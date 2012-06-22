@@ -57,7 +57,7 @@ or from source:
 Python Libraries
 ----------------
 
-The following Python libraries are required to run Focus; though `pip`
+The following Python libraries are required to run Focus; though ``pip``
 should handle taking care of installing them if not available.
 
 * psutil >= 0.4.1
@@ -67,7 +67,7 @@ Optional External Dependencies
 ------------------------------
 
 * Linux:
-    `mpg123`, `play`, or `aplay` [WAV only] (to play sounds)
+    ``mpg123``, ``play``, or ``aplay`` [WAV only] (to play sounds)
 
 Usage
 =====
@@ -82,7 +82,7 @@ or, clone from existing task:
     $ focus make task_name other_task [--skip-edit]
 
 This command opens the task configuration file using the shell's default editor
-($EDITOR), unless the `--skip-edit` flag is provided. After the editor exits,
+($EDITOR), unless the ``--skip-edit`` flag is provided. After the editor exits,
 the configuration file is validated and will prompt for retry if validation
 fails.
 
@@ -109,7 +109,7 @@ Edit Task
 
     $ focus edit task_name [--skip-edit]
 
-Like the `make` command, this command opens the task configuration file using
+Like the ``make`` command, this command opens the task configuration file using
 the shell's default editor ($EDITOR). After the editor exits, the
 configuration file is validated and will prompt for retry if validation fails.
 
@@ -119,7 +119,7 @@ List Tasks
     $ focus list [-v] [--verbose]
 
 This will scan for existing tasks with valid configuration files and print
-the names of the tasks found. Specify the `-v` or `--verbose` flag to also
+the names of the tasks found. Specify the ``-v`` or ``--verbose`` flag to also
 print setting information for each task's configuration file. Invalid tasks
 are marked in red, while the active task is marked in green.
 
@@ -144,7 +144,7 @@ Delete Task
     $ focus destroy task_name [-f] [--force]
 
 This commands removes the provided task after prompting for confirmation.
-Specify the `-f` or `--force` flag to skip confirmation.
+Specify the ``-f`` or ``--force`` flag to skip confirmation.
 
 Show Remaining Time for Active Task
 -----------------------------------
@@ -152,10 +152,10 @@ Show Remaining Time for Active Task
     $ focus left [-s] [--short]
 
 This commands prints the amount of time remaining, in minutes, for the active
-task. Specify the `-s` or `--short` flag to print just the number of minutes.
+task. Specify the ``-s`` or ``--short`` flag to print just the number of minutes.
 
 *Note: this command is only available if the active task has defined the
-`duration` option.*
+duration option.*
 
 Task Configuration
 ==================
@@ -181,24 +181,24 @@ double quote, or may be unquoted if spaces and quotes are escaped.
 Timer
 -----
 
-The `duration` option will automatically end the task after the specified
+The ``duration`` option will automatically end the task after the specified
 number of minutes. This option supports only a single value > 0 and the
 option cannot be defined more than once.
 
-If defined, you can setup options for the `timer _actions` block,
+If defined, you can setup options for the ``timer_actions`` block,
 which will be triggered after the timer has elapsed. Otherwise, this block
-is ignored. You may also setup options for the `end_actions` block to run
-when manually ending the task. Additionally, this enables the `left` command
-when running the `focus` program to view remaining task time.
+is ignored. You may also setup options for the ``end_actions`` block to run
+when manually ending the task. Additionally, this enables the ``left`` command
+when running the ``focus`` program to view remaining task time.
 
-The `play` option for either block supports the path to a sound file that
-is playable on your system via available external binaries (`mpg123`, `play`,
-and `aplay` [WAV only]). Only a single value is supported, and the option
+The ``play`` option for either block supports the path to a sound file that
+is playable on your system via available external binaries (``mpg123``, ``play``,
+and ``aplay`` [WAV only]). Only a single value is supported, and the option
 cannot be defined more than once. Make sure your preferred binary is
 installed and works correctly when manually running your sound file through
 the program.
 
-The `run` option for either block supports an arbitrary shell command, an
+The ``run`` option for either block supports an arbitrary shell command, an
 application name, or the path to an executable script. Arguments and shell
 redirection are also possible. Multiple values may be provided and the option
 may be redefined multiple times.
@@ -206,28 +206,28 @@ may be redefined multiple times.
 Blocking Sites
 --------------
 
-The `block` option under the `sites` block allows for blocking website domains
+The ``block`` option under the ``sites`` block allows for blocking website domains
 while the task is active. Each option supports one or more domain values. The
 option may be redefined multiple times.
 
 Applications
 ------------
 
-Finally, the `apps` block allows for options to run, close, or block
+Finally, the ``apps`` block allows for options to run, close, or block
 applications. Each option supports multiple values and can be repeated as
 multiple option definitions.
 
-The `run` option supports an arbitrary shell command, an application name, or
+The ``run`` option supports an arbitrary shell command, an application name, or
 the path to an executable script. Arguments and shell redirection are also
 possible. This option will be initiated when starting on a task.
 
-The `close` option supports an arbitrary shell command, an application name, or
-the path to an executable script. Unlike `run`, shell redirection is not
+The ``close`` option supports an arbitrary shell command, an application name, or
+the path to an executable script. Unlike ``run``, shell redirection is not
 supported and all arguments provided are considered as part of the
 command/application name provided (e.g. "Google Chrome" not "Google" with
 "Chrome" argument). This option will be initiated when starting on a task.
 
-The `block` option is exactly like `close`, except it is run continously while
+The ``block`` option is exactly like ``close``, except it is run continously while
 the task is active, approximately every second.
 
 Plugin System
@@ -239,11 +239,11 @@ functionality. In fact, plugins are used internally for everything.
 Installing Plugins
 ------------------
 
-After running the `focus` command, the ``.focus`` directory is created in your
+After running the ``focus`` command, the ``.focus`` directory is created in your
 home directory ($HOME or ~). Under that lives a ``plugins`` subdirectory, where
 you can drop your .py python plugin files. If they are valid, the plugins will
-automatically become available when running `focus`. For command plugins,
-running `focus` will print a help banner with the installed commands, which
+automatically become available when running ``focus``. For command plugins,
+running ``focus`` will print a help banner with the installed commands, which
 will include your plugins.
 
 *Remember, if the plugin is available only for active tasks, the appropriate
@@ -253,26 +253,26 @@ Command Plugins
 ---------------
 
 Command plugins define the commands that are available for the Focus binary
-(e.g. `on`, `make`, etc.). These can be available always, only for tasks
+(e.g. ``on``, ``make``, etc.). These can be available always, only for tasks
 that define certain options, or only for active tasks.
 
-The `command` class attribute identifies the plugin as a command plugin and
+The ``command`` class attribute identifies the plugin as a command plugin and
 specifies the actual command name to register with the plugin. It should be
 unique.
 
-The plugin should define the `execute()` method for running the command.
-The `env` argument represents the environment and the `args` argument
+The plugin should define the ``execute()`` method for running the command.
+The ``env`` argument represents the environment and the ``args`` argument
 is the result of parsing the command-line arguments using the
-`ArgumentParser` object.
+``ArgumentParser`` object.
 
 **Method Definition:** ::
 
     def execute(self, env, args):
         env.io.write('Verbose: {0}'.format(args.verbose))
 
-To simply print an error message, use the `env.io.error()` method. If you need
+To simply print an error message, use the ``env.io.error()`` method. If you need
 to also return a specific error code along with printing an error message
-raise a `FocusError` exception from the `focus.errors` module: ::
+raise a ``FocusError`` exception from the ``focus.errors`` module: ::
 
     from focus.errors import FocusError
 
@@ -281,8 +281,8 @@ raise a `FocusError` exception from the `focus.errors` module: ::
         raise FocusError('message here', code=123)
 
 If the plugin needs to define any command-line arguments, it should define the
-`setup_parser()` method. The `parser` argument is an instance of
-`argparse.ArgumentParser` and should be updated as necessary to add arguments.
+``setup_parser()`` method. The ``parser`` argument is an instance of
+``argparse.ArgumentParser`` and should be updated as necessary to add arguments.
 
 **Method Definition:** ::
 
@@ -320,14 +320,14 @@ to run at the start of the task, during the task loop (every second), at the
 end of a task, or some combination therein. These plugins will be run within a
 daemon process when the task starts.
 
-The `events` class attribute identifies the plugin as a task event plugin and
-specifies the events of the task that should be registered: `task_start`,
-`task_run`, `task_end`.
+The ``events`` class attribute identifies the plugin as a task event plugin and
+specifies the events of the task that should be registered: ``task_start``,
+``task_run``, ``task_end``.
 
-The plugin should define the `on_taskstart()`, `on_taskrun()`, or
-`on_taskend()` methods corresponding to the values provided for the `events`
-attribute. The `task` argument represents the active task, which includes
-`name`, `duration` (minutes), and a few methods such as `start()` and `stop()`.
+The plugin should define the ``on_taskstart()``, ``on_taskrun()``, or
+``on_taskend()`` methods corresponding to the values provided for the ``events``
+attribute. The ``task`` argument represents the active task, which includes
+``name``, ``duration`` (minutes), and a few methods such as ``start()`` and ``stop()``.
 
 **Method Definition:** ::
 
@@ -360,12 +360,12 @@ Plugin Options
 
 Two attributes exist to allow plugins to only be loaded for active tasks:
 
-1. **`options`**
+1. **options**
 
-   Set the `options` class attribute. This defines the options that, if
+   Set the ``options`` class attribute. This defines the options that, if
    provided in a task configuration file, will trigger the load of this plugin.
-   Options are either non-block (e.g. `duration`) or block
-   (e.g. `apps` => { `run`, `close`, `block` }, `sites` => { `block` }, etc.).
+   Options are either non-block (e.g. ``duration``) or block
+   (e.g. ``apps`` => { ``run``, ``close``, ``block`` }, ``sites`` => { ``block`` }, etc.).
 
    *Note: these options should be unique.*
 
@@ -407,12 +407,12 @@ Two attributes exist to allow plugins to only be loaded for active tasks:
            }
        }
 
-2. task_only
+2. **task_only**
 
-   Set the `task_only` class attribute, so the plugin will be available for any
+   Set the ``task_only`` class attribute, so the plugin will be available for any
    task once started.
 
-   *Note: this is implied if the `options` class attribute is defined.*
+   *Note: this is implied if the options class attribute is defined.*
 
    **Plugin Snippet:** ::
 
@@ -424,10 +424,10 @@ Two attributes exist to allow plugins to only be loaded for active tasks:
 Root Access
 -----------
 
-If a plugin needs root access, it should define the `needs_root` attribute.
-When set, this installs a `run_root` method on the plugin class, which
+If a plugin needs root access, it should define the ``needs_root`` attribute.
+When set, this installs a ``run_root()`` method on the plugin class, which
 accepts an arbitrary command string and returns a boolean for success or
-failure. Internally, Focus uses the `sudo` command to temporarily escalate
+failure. Internally, Focus uses the ``sudo`` command to temporarily escalate
 privileges.
 
 **Plugin Snippet:** ::
