@@ -1,0 +1,49 @@
+#!/usr/bin/env python
+
+import os
+import sys
+
+from focus import environment, daemon, errors
+
+
+def main(argv):
+    try:
+        # get data dir if provided
+        datadir = None
+        argc = len(argv)
+
+        if argc == 1:
+            datadir = argv[0]
+            if datadir and not os.path.isdir(datadir):
+                raise ValueError(u'Invalid directory "{0}"'.format(datadir))
+
+        elif argc > 1:
+            raise ValueError(u'Invalid arguments')
+
+
+        # spin up the environment
+        io = environment.IOStream(inputs=sys.stdin, outputs=sys.stdout,
+                                  errors=sys.stderr)
+        env = environment.Environment(io=io, data_dir=datadir)
+        env.load()
+
+        # must have an active task
+        if not env.task.active:
+            raise errors.NoActiveTask
+
+        # run the focusd daemon
+        daemon.focusd(env.task)
+        return 0
+
+    except errors.FocusError as exc:
+        io.error(unicode(exc))
+        return exc.code
+
+    except Exception as exc:
+        io.error(u'Error: {0}'.format(exc))
+        
+    return 2
+
+if __name__ == '__main__':
+    code = main(sys.argv[1:])
+    sys.exit(code)
