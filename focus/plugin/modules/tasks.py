@@ -10,7 +10,6 @@ import subprocess
 
 from focus import errors, parser, common
 from focus.plugin import base, registration
-from focus.environment.cli import FocusArgParser
 
 
 __all__ = ('TaskStart', 'TaskStop', 'TaskCreate', 'TaskEdit',
