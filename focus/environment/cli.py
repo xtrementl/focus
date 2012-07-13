@@ -136,7 +136,7 @@ class CLI(object):
         usage_str = 'focus [-h] [-v] [--no-color] <command> [<args>]'
 
         # setup parser
-        parser = FocusArgParser(description='Command-line productivity tool.',
+        parser = FocusArgParser(description='Command-line productivity tool for improved task workflows.',
                                 epilog="See 'focus help <command>' for more "
                                        "information on a specific command.",
                                 usage=usage_str)

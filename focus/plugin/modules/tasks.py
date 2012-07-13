@@ -267,7 +267,7 @@ class TaskCreate(base.Plugin):
 
 
 class TaskEdit(base.Plugin):
-    """ Edits task configuration for an existing task.
+    """ Edits configuration for an existing task.
         """
     name = 'TaskEdit'
     version = '0.1'

@@ -152,7 +152,8 @@ Show Remaining Time for Active Task
     $ focus left [-s] [--short]
 
 This commands prints the amount of time remaining, in minutes, for the active
-task. Specify the ``-s`` or ``--short`` flag to print just the number of minutes.
+task. Specify the ``-s`` or ``--short`` flag to print just the number of
+minutes.
 
 *Note: this command is only available if the active task has defined the
 duration option.*
@@ -192,11 +193,11 @@ when manually ending the task. Additionally, this enables the ``left`` command
 when running the ``focus`` program to view remaining task time.
 
 The ``play`` option for either block supports the path to a sound file that
-is playable on your system via available external binaries (``mpg123``, ``play``,
-and ``aplay`` [WAV only]). Only a single value is supported, and the option
-cannot be defined more than once. Make sure your preferred binary is
-installed and works correctly when manually running your sound file through
-the program.
+is playable on your system via available external binaries (``mpg123``,
+``play``, and ``aplay`` [WAV only]). Only a single value is supported, and the
+option cannot be defined more than once. Make sure your preferred binary is
+installed and works correctly when manually running your sound file through the
+program.
 
 The ``run`` option for either block supports an arbitrary shell command, an
 application name, or the path to an executable script. Arguments and shell
@@ -206,9 +207,9 @@ may be redefined multiple times.
 Blocking Sites
 --------------
 
-The ``block`` option under the ``sites`` block allows for blocking website domains
-while the task is active. Each option supports one or more domain values. The
-option may be redefined multiple times.
+The ``block`` option under the ``sites`` block allows for blocking website
+domains while the task is active. Each option supports one or more domain
+values. The option may be redefined multiple times.
 
 Applications
 ------------
@@ -221,14 +222,14 @@ The ``run`` option supports an arbitrary shell command, an application name, or
 the path to an executable script. Arguments and shell redirection are also
 possible. This option will be initiated when starting on a task.
 
-The ``close`` option supports an arbitrary shell command, an application name, or
-the path to an executable script. Unlike ``run``, shell redirection is not
+The ``close`` option supports an arbitrary shell command, an application name,
+or the path to an executable script. Unlike ``run``, shell redirection is not
 supported and all arguments provided are considered as part of the
 command/application name provided (e.g. "Google Chrome" not "Google" with
 "Chrome" argument). This option will be initiated when starting on a task.
 
-The ``block`` option is exactly like ``close``, except it is run continously while
-the task is active, approximately every second.
+The ``block`` option behaves exactly like ``close``, except that it runs
+continously while the task is active (approximately once a second).
 
 Plugin System
 =============
@@ -239,12 +240,12 @@ functionality. In fact, plugins are used internally for everything.
 Installing Plugins
 ------------------
 
-After running the ``focus`` command, the ``.focus`` directory is created in your
-home directory ($HOME or ~). Under that lives a ``plugins`` subdirectory, where
-you can drop your .py python plugin files. If they are valid, the plugins will
-automatically become available when running ``focus``. For command plugins,
-running ``focus`` will print a help banner with the installed commands, which
-will include your plugins.
+After running the ``focus`` command, the ``.focus`` directory is created in
+your home directory ($HOME or ~). Under that lives a ``plugins`` subdirectory,
+where you can drop your .py python plugin files. If they are valid, the plugins
+will automatically become available when running ``focus``. For command
+plugins, running ``focus`` will print a help banner with the installed
+commands, which will include your plugins.
 
 *Remember, if the plugin is available only for active tasks, the appropriate
 task must be active to see your plugin show up.*
@@ -257,21 +258,22 @@ Command plugins define the commands that are available for the Focus binary
 that define certain options, or only for active tasks.
 
 The ``command`` class attribute identifies the plugin as a command plugin and
-specifies the actual command name to register with the plugin. It should be
-unique.
+specifies the actual command name to register with the plugin.
 
-The plugin should define the ``execute()`` method for running the command.
-The ``env`` argument represents the environment and the ``args`` argument
-is the result of parsing the command-line arguments using the
-``ArgumentParser`` object.
+*Note: The command name should be unique.*
+
+The plugin should define the ``execute()`` method for running the command. The
+``env`` argument represents the environment and the ``args`` argument is the
+result of parsing the command-line arguments using the ``ArgumentParser``
+object.
 
 **Method Definition:** ::
 
     def execute(self, env, args):
         env.io.write('Verbose: {0}'.format(args.verbose))
 
-To simply print an error message, use the ``env.io.error()`` method. If you need
-to also return a specific error code along with printing an error message
+To simply print an error message, use the ``env.io.error()`` method. If you
+need to also return a specific error code along with printing an error message
 raise a ``FocusError`` exception from the ``focus.errors`` module: ::
 
     from focus.errors import FocusError
@@ -282,7 +284,8 @@ raise a ``FocusError`` exception from the ``focus.errors`` module: ::
 
 If the plugin needs to define any command-line arguments, it should define the
 ``setup_parser()`` method. The ``parser`` argument is an instance of
-``argparse.ArgumentParser`` and should be updated as necessary to add arguments.
+``argparse.ArgumentParser`` and should be updated as necessary to add
+arguments.
 
 **Method Definition:** ::
 
@@ -325,9 +328,10 @@ specifies the events of the task that should be registered: ``task_start``,
 ``task_run``, ``task_end``.
 
 The plugin should define the ``on_taskstart()``, ``on_taskrun()``, or
-``on_taskend()`` methods corresponding to the values provided for the ``events``
-attribute. The ``task`` argument represents the active task, which includes
-``name``, ``duration`` (minutes), and a few methods such as ``start()`` and ``stop()``.
+``on_taskend()`` methods corresponding to the values provided for the
+``events`` attribute. The ``task`` argument represents the active task, which
+includes ``name``, ``duration`` (minutes), and a few methods such as
+``start()`` and ``stop()``.
 
 **Method Definition:** ::
 
@@ -365,7 +369,10 @@ Two attributes exist to allow plugins to only be loaded for active tasks:
    Set the ``options`` class attribute. This defines the options that, if
    provided in a task configuration file, will trigger the load of this plugin.
    Options are either non-block (e.g. ``duration``) or block
-   (e.g. ``apps`` => { ``run``, ``close``, ``block`` }, ``sites`` => { ``block`` }, etc.).
+   (e.g. ``apps`` => { ``run``, ``close``, ``block`` }, ``sites`` =>
+   { ``block`` }, etc.). When this attribute is set, the plugin should define
+   the ``parse_option()`` method in order to parse the values set in a task
+   configuration file. See example below.
 
    *Note: these options should be unique.*
 
@@ -407,12 +414,21 @@ Two attributes exist to allow plugins to only be loaded for active tasks:
            }
        }
 
+   **Method Definition:** ::
+
+       def parse_option(self, option, block_name, *values):
+           # raise ValueError exception with a message to reject the provided
+           # value. this will propagate up to the cli when loading a task
+
+   Here, the ``option`` and ``block_name`` names for the currently parsed
+   option are provided. ``block_name`` will be ``None`` when parsing non-block
+   options. ``values`` holds one or more values associated with the provided
+   option.
+
 2. **task_only**
 
-   Set the ``task_only`` class attribute, so the plugin will be available for any
-   task once started.
-
-   *Note: this is implied if the options class attribute is defined.*
+   Set the ``task_only`` class attribute, so the plugin will be available for
+   any task once started.
 
    **Plugin Snippet:** ::
 
