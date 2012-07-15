@@ -4,7 +4,6 @@
     """
 
 import os
-import sys
 import tempfile
 import subprocess
 
@@ -96,7 +95,7 @@ def _edit_task_config(env, task_config, confirm):
         """
 
     # get editor program
-    if sys.platform.lower().startswith('darwin'):
+    if common.IS_MACOSX:
         def_editor = 'open'
     else:
         def_editor = 'vi'

@@ -6,7 +6,6 @@
 
 import os
 import re
-import sys
 import urlparse
 import tempfile
 
@@ -36,9 +35,7 @@ class SiteBlock(base.Plugin):
         {
             'block': 'sites',
             'options': [
-                {
-                    'name': 'block',
-                }
+                { 'name': 'block' }
             ]
         }
     ]

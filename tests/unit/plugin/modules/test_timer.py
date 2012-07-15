@@ -1,4 +1,3 @@
-from focus.errors import HelpBanner
 from focus.plugin.modules import timer as plugins
 from focus_unittest import FocusTestCase, MockEnvironment
 
@@ -102,48 +101,10 @@ class TestTimer(FocusTestCase):
         with self.assertRaises(ValueError):
             self.plugin.parse_option('duration', None, '22.50')
 
-    def testNonExist_PlayEndAction__parse_option(self):
-        """ Timer.parse_option: invalid file provided for
-            end_actions.play option.
-            """
-        with self.assertRaises(ValueError):
-            self.plugin.parse_option('play', 'timer_actions', 'non-exist-file')
-
-    def testTimerNotElapsedStart__on_taskrun(self):
-        """ Timer.on_taskrun: task just started; timer hasn't elapsed.
+    def testSetTaskTotalDuration__on_taskstart(self):
+        """ Timer.on_taskstart: sets task total duration reached timer setting.
             """
         self.plugin.total_duration = 30
-        self.env.task.duration = 0
-        self.env.task._loaded = True
-        self.plugin.on_taskrun(self.env.task)
-        self.assertFalse(self.plugin.elapsed)
-        self.assertTrue(self.env.task._loaded)
-
-    def testTimerNotElapsedMid__on_taskrun(self):
-        """ Timer.on_taskrun: mid-way through task duration; timer hasn't
-            elapsed.
-            """
-        self.plugin.total_duration = 30
-        self.env.task.duration = 15
-        self.env.task._loaded = True
-        self.plugin.on_taskrun(self.env.task)
-        self.assertFalse(self.plugin.elapsed)
-        self.assertTrue(self.env.task._loaded)
-
-    def testTimerElapsed__on_taskrun(self):
-        """ Timer.on_taskrun: task duration reached timer setting; timer
-            has elapsed.
-            """
-        self.plugin.total_duration = 30
-        self.env.task.duration = 30
-        self.env.task._loaded = True
-        self.plugin.on_taskrun(self.env.task)
-        self.assertTrue(self.plugin.elapsed)
-        self.assertFalse(self.env.task._loaded)
-
-    def testTimerElapsed__on_taskend(self):
-        """ Timer.on_taskend: task has ended, end actions run.
-            """
-        self.env.task._loaded = True
-        self.plugin.elapsed = True
-        self.plugin.on_taskend(self.env.task)
+        self.plugin.on_taskstart(self.env.task)
+        self.assertEqual(self.env.task._total_duration,
+                         self.plugin.total_duration)

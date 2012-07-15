@@ -5,7 +5,6 @@
     task events hooks, and configurable per-task plugin settings.
     """
 
-import copy
 import types
 
 from focus import common, registry, errors
@@ -306,9 +305,8 @@ def run_event_hooks(event, task):
                 plugin_obj = get_plugin()
 
                 if not _is_plugin_disabled(plugin_obj):
-                    task_clone = copy.deepcopy(task)
                     try:
-                        getattr(plugin_obj, method)(task_clone)  # execute
+                        getattr(plugin_obj, method)(task)  # execute
                     except Exception:
                         # TODO: log these issues for plugin author or user
                         pass

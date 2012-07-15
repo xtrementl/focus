@@ -8,12 +8,9 @@
     """
 
 import os
-import sys
 import time
-import shlex
-import hashlib
-
 import psutil
+import hashlib
 
 from focus import common
 from focus.plugin import base
@@ -149,12 +146,12 @@ def _stop_processes(paths):
 
 
 class AppRun(base.Plugin):
-    """ Runs applications at task start.
+    """ Runs applications at task start and completion.
         """
     name = 'AppRun'
     version = 0.1
     target_version = '>=0.1'
-    events = ['task_start']
+    events = ['task_start', 'task_end']
     options = [
         # Example:
         #   apps {
@@ -162,56 +159,82 @@ class AppRun(base.Plugin):
         #       run "echo hi >> /tmp/foo.bar";
         #       run "whoami >> /tmp/whoami";
         #       run chromium\ http://www.google.com;
+        #       end_run killall\ urxvt;
+        #       timer_run killall\ urxvt;
         #   }
 
         {
             'block': 'apps',
             'options': [
-                {'name': 'run'}
+                {'name': 'run'},
+                {'name': 'end_run'},
+                {'name': 'timer_run'}
             ]
         }
     ]
 
     def __init__(self):
         super(AppRun, self).__init__()
-        self.paths = set()
+        self.paths = {}
+
+    def _run_apps(self, paths):
+        """ Runs apps for the provided paths.
+            """
+
+        for path in paths:
+            common.shell_process(path, background=True)
+            time.sleep(0.2)  # delay some between starts
 
     def parse_option(self, option, block_name, *values):
         """ Parse app path values for option.
             """
-        self.paths.update(common.extract_app_paths(values))
+        if option == 'run':
+            option = 'start_' + option
+
+        key = option.split('_', 1)[0]
+        self.paths[key] = set(common.extract_app_paths(values))
 
     def on_taskstart(self, task):
-        for path in self.paths:
-            common.shell_process(path, background=True)
-            time.sleep(0.2)  # delay some between starts
+        if 'start' in self.paths:
+            self._run_apps(self.paths['start'])
+
+    def on_taskend(self, task):
+        key = 'timer' if task.elapsed else 'end'
+        paths = self.paths.get(key)
+
+        if paths:
+            self._run_apps(paths)
 
 
 class AppClose(base.Plugin):
-    """ Closes applications at task start.
+    """ Closes applications at task start and completion.
         """
     name = 'AppClose'
     version = '0.1'
     target_version = '>=0.1'
-    events = ['task_start']
+    events = ['task_start', 'task_end']
     options = [
         # Example:
         #   apps {
         #       close firefox, chromium;
         #       close /usr/bin/something;
+        #       end_close urxvt;
+        #       timer_close urxvt;
         #   }
 
         {
             'block': 'apps',
             'options': [
                 {'name': 'close'},
+                {'name': 'end_close'},
+                {'name': 'timer_close'}
             ]
         }
     ]
 
     def __init__(self):
         super(AppClose, self).__init__()
-        self.paths = set()
+        self.paths = {}
 
     def parse_option(self, option, block_name, *values):
         """ Parse app path values for option.
@@ -220,10 +243,23 @@ class AppClose(base.Plugin):
         # treat arguments as part of the program name (support spaces in name)
         values = [x.replace(' ', '\\ ') if not x.startswith(os.sep) else x
                      for x in [str(v) for v in values]]
-        self.paths.update(common.extract_app_paths(values))
+
+        if option == 'close':
+            option = 'start_' + option
+
+        key = option.split('_', 1)[0]
+        self.paths[key] = set(common.extract_app_paths(values))
 
     def on_taskstart(self, task):
-        _stop_processes(paths=self.paths)
+        if 'start' in self.paths:
+            _stop_processes(paths=self.paths['start'])
+
+    def on_taskend(self, task):
+        key = 'timer' if task.elapsed else 'end'
+        paths = self.paths.get(key)
+
+        if paths:
+            _stop_processes(paths=paths)
 
 
 class AppBlock(AppClose):
@@ -250,4 +286,4 @@ class AppBlock(AppClose):
     ]
 
     def on_taskrun(self, task):
-        _stop_processes(paths=self.paths)
+        _stop_processes(paths=self.paths['block'])

@@ -521,7 +521,11 @@ class TaskRunner(TaskProcess):
         """ Runs events for plugins during the main process loop.
             """
 
-        self._run_events()
+        if self._task.elapsed:
+            self.shutdown()
+
+        else:
+            self._run_events()
 
     def shutdown(self, skip_hooks=False):
         """ Shuts down the process.

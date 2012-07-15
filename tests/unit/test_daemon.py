@@ -300,6 +300,13 @@ class TestTaskRunner(FocusTestCase):
 
         super(TestTaskRunner, self).tearDown()
 
+    def testElapsedShutdown___run(self):
+        """ TaskRunner._run: Shuts down if task has elapsed.
+            """
+        self.task_runner._task.elapsed = True
+        with self.assertRaises(SystemExit):
+            self.task_runner._run()
+
     def test___setup_root_plugins(self):
         """ TaskRunner._setup_root_plugins: installs root plugin methods.
             """

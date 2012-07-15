@@ -29,6 +29,7 @@ class Task(object):
 
         self._name = None
         self._start_time = None
+        self._total_duration = 0
         self._owner = os.getuid()
         self._loaded = False
         self._default_task_config = '/etc/focus_task.cfg'
@@ -429,6 +430,17 @@ class Task(object):
 
         self._clean()
 
+    def set_total_duration(self, duration):
+        """ Set the total task duration in minutes.
+            """
+        if duration < 1:
+            raise ValueError(u'Duration must be postive')
+
+        elif self.duration > duration:
+            raise ValueError(u'{0} must be greater than current duration')
+
+        self._total_duration = duration
+
     def __str__(self):
         name = common.to_utf8(self.name)
         duration = '<1' if self.duration < 1 else '{0}'.format(self.duration)
@@ -471,6 +483,13 @@ class Task(object):
                 (delta.seconds + delta.days * 24 * 3600) * 10 ** 6) / 10 ** 6
 
         return max(0, int(round(total_secs / 60.0)))
+
+    @property
+    def elapsed(self):
+        """ Returns if task's duration has exceeded total_duration value.
+            """
+        return bool(self._total_duration and
+                    self.duration >= self._total_duration)
 
     @property
     def base_dir(self):

@@ -310,6 +310,12 @@ class TestTask(FocusTestCase):
         self.task.stop()
         self.assertFalse(os.path.isfile(self.task._paths['active_file']))
 
+    def test__set_total_duration(self):
+        """ Task.set_total_duration: Correctly sets total task duration.
+            """
+        self.task.set_total_duration(15)
+        self.assertEqual(self.task._total_duration, 15)
+
     def test__dunderStr(self):
         """ Task.__str__: returns proper str version.
             """
@@ -381,6 +387,26 @@ class TestTask(FocusTestCase):
         self.task._loaded = True
         self.task._start_time = datetime.now() + timedelta(minutes=-15)
         self.assertEqual(self.task.duration, 15)
+
+    def test__elapsed(self):
+        """ Task.elapsed (property): returns correct elapsed status.
+            """
+        self.task._loaded = True
+
+        # not elapsed
+        self.task._start_time = datetime.now() + timedelta(minutes=-15)
+        self.task._total_duration = 30
+        self.assertFalse(self.task.elapsed)
+
+        # elapsed
+        self.task._start_time = datetime.now() + timedelta(minutes=-15)
+        self.task._total_duration = 15
+        self.assertTrue(self.task.elapsed)
+
+        # elapsed, overrun
+        self.task._total_duration = 15
+        self.task._start_time = datetime.now() + timedelta(minutes=-25)
+        self.assertTrue(self.task.elapsed)
 
     def test__base_dir(self):
         """ Task.base_dir (property): returns correct base_dir.

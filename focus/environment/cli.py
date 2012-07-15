@@ -7,8 +7,8 @@ import sys
 import argparse
 
 from focus.errors import HelpBanner
+from focus.plugin import registration
 from focus.version import __version__
-from focus.plugin import base, registration
 
 __all__ = ('FocusArgParser', 'CLI')
 

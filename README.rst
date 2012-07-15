@@ -179,48 +179,16 @@ double quote, or may be unquoted if spaces and quotes are escaped.
     option 'a \'b\'', a\ \'b\', "a \\ b", "a \ b",
             a\ \\ b, a\ \\\ b, "'abc' - \"d\"";
 
-Timer
------
-
-The ``duration`` option will automatically end the task after the specified
-number of minutes. This option supports only a single value > 0 and the
-option cannot be defined more than once.
-
-If defined, you can setup options for the ``timer_actions`` block,
-which will be triggered after the timer has elapsed. Otherwise, this block
-is ignored. You may also setup options for the ``end_actions`` block to run
-when manually ending the task. Additionally, this enables the ``left`` command
-when running the ``focus`` program to view remaining task time.
-
-The ``play`` option for either block supports the path to a sound file that
-is playable on your system via available external binaries (``mpg123``,
-``play``, and ``aplay`` [WAV only]). Only a single value is supported, and the
-option cannot be defined more than once. Make sure your preferred binary is
-installed and works correctly when manually running your sound file through the
-program.
-
-The ``run`` option for either block supports an arbitrary shell command, an
-application name, or the path to an executable script. Arguments and shell
-redirection are also possible. Multiple values may be provided and the option
-may be redefined multiple times.
-
-Blocking Sites
---------------
-
-The ``block`` option under the ``sites`` block allows for blocking website
-domains while the task is active. Each option supports one or more domain
-values. The option may be redefined multiple times.
-
 Applications
 ------------
 
-Finally, the ``apps`` block allows for options to run, close, or block
-applications. Each option supports multiple values and can be repeated as
-multiple option definitions.
+The ``apps`` block allows for options to run, close, or block applications.
+Each option supports multiple values and can be repeated as multiple option
+definitions.
 
 The ``run`` option supports an arbitrary shell command, an application name, or
 the path to an executable script. Arguments and shell redirection are also
-possible. This option will be initiated when starting on a task.
+possible. This option will be initiated when starting a task.
 
 The ``close`` option supports an arbitrary shell command, an application name,
 or the path to an executable script. Unlike ``run``, shell redirection is not
@@ -230,6 +198,59 @@ command/application name provided (e.g. "Google Chrome" not "Google" with
 
 The ``block`` option behaves exactly like ``close``, except that it runs
 continously while the task is active (approximately once a second).
+
+The ``run`` and ``close`` options also support the "end_" prefix which will
+instead be activated when a task is manually ended.
+
+For example: ::
+
+    apps {
+        run /path/to/file;       # run app at task start
+        close /path/to/file;     # close app at task start
+        end_run /path/to/file;   # run app at task end (manual)
+        end_close /path/to/file; # close app at task end (manual)
+    }
+
+Task Timer
+----------
+
+The ``duration`` option will automatically end the task after the specified
+number of minutes. This option supports only a single value > 0 and the
+option cannot be defined more than once.
+
+This also enables the ``left`` command when running the ``focus`` program to
+view remaining task time.
+
+Additionally, any options that support the "end_" prefix will also support
+the "timer_" prefix. They function similar to "end_" prefixed options, except
+they are only activated after the task timer has elapsed.
+
+For example: ::
+
+    apps {
+        timer_run /path/to/file;   # run app at task end (timer elapsed)
+        timer_close /path/to/file; # close app at task end (timer elapsed)
+    }
+
+Playing Sounds
+--------------
+
+The ``play`` option for either block supports the path to a sound file that
+is playable on your system via available external binaries (``mpg123``,
+``play``, and ``aplay`` [WAV only]). Only a single value is supported, and the
+option cannot be defined more than once. Make sure your preferred binary is
+installed and works correctly by manually running your sound file through the
+program.
+
+*Note: the option supports the "end_" and "timer_" prefixed versions.*
+
+Blocking Sites
+--------------
+
+The ``block`` option under the ``sites`` block allows for blocking website
+domains while the task is active. Each option supports one or more domain
+values. The option may be redefined multiple times.
+
 
 Plugin System
 =============

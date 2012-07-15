@@ -97,35 +97,50 @@ class TestAppRun(FocusTestCase):
         self.task = None
         super(TestAppRun, self).tearDown()
 
+    def testPathKeys__parse_option(self):
+        """ AppRun.parse_option: check if option names set correct path keys.
+            """
+        self.plugin.parse_option('run', 'apps', 'cat')
+        self.assertIn('start', self.plugin.paths)
+        self.assertEqual(self.plugin.paths['start'], set(['/bin/cat']))
+
+        self.plugin.parse_option('end_run', 'apps', 'cp')
+        self.assertIn('end', self.plugin.paths)
+        self.assertEqual(self.plugin.paths['end'], set(['/bin/cp']))
+
+        self.plugin.parse_option('timer_run', 'apps', 'cat')
+        self.assertIn('timer', self.plugin.paths)
+        self.assertEqual(self.plugin.paths['timer'], set(['/bin/cat']))
+
     def testDedupeOptionValue__parse_option(self):
         """ AppRun.parse_option: duplicate values for options are
             removed.
             """
-        self.plugin.parse_option('start', 'apps', 'cat')
-        self.plugin.parse_option('start', 'apps', 'cat')
-        self.assertEqual(self.plugin.paths, set(['/bin/cat']))
+        self.plugin.parse_option('run', 'apps', 'cat')
+        self.plugin.parse_option('run', 'apps', 'cat')
+        self.assertEqual(self.plugin.paths, dict(start=set(['/bin/cat'])))
 
     def testMultiValueOption__parse_option(self):
         """ AppRun.parse_option: options support multiple values.
             """
-        self.plugin.parse_option('start', 'apps', 'cat', 'chmod')
+        self.plugin.parse_option('run', 'apps', 'cat', 'chmod')
         self.assertEqual(self.plugin.paths,
-            set(['/bin/cat', '/bin/chmod']))
+            dict(start=set(['/bin/cat', '/bin/chmod'])))
 
     def testOptionsSupportArguments__parse_option(self):
         """ AppRun.parse_option: options support arguments for values.
             """
-        self.plugin.parse_option('start', 'apps', 'cp notexist nowhere')
+        self.plugin.parse_option('run', 'apps', 'cp notexist nowhere')
         self.assertEqual(self.plugin.paths,
-            set(['/bin/cp notexist nowhere']))
+            dict(start=set(['/bin/cp notexist nowhere'])))
 
     def testOptionValue_CommandsExist__parse_option(self):
         """ AppRun.parse_option: extracts option values are existing commands.
             """
         with self.assertRaises(ValueError):
-            self.plugin.parse_option('start', 'apps', 'non-existent-cmd')
+            self.plugin.parse_option('run', 'apps', 'non-existent-cmd')
         with self.assertRaises(ValueError):
-            self.plugin.parse_option('start', 'apps', '/bin/non-existent-cmd')
+            self.plugin.parse_option('run', 'apps', '/bin/non-existent-cmd')
 
     def test__on_taskstart(self):
         """ AppRun.on_taskstart: configured apps are launched.
@@ -134,7 +149,7 @@ class TestAppRun(FocusTestCase):
         # make a copy of 'sh' shell binary so we have something unique that we
         # can have plugin launch and check for accurately
         bin_file = self.make_file()
-        self.plugin.paths.add(bin_file)
+        self.plugin.paths['start'] = set([bin_file])
         shutil.copyfile('/bin/sh', bin_file)
         os.chmod(bin_file, 0700)  # set exec.. silly macosx
 
@@ -178,20 +193,35 @@ class TestAppClose(CloseAppCase):
         self.task = None
         super(TestAppClose, self).tearDown()
 
+    def testPathKeys__parse_option(self):
+        """ AppClose.parse_option: check if option names set correct path keys.
+            """
+        self.plugin.parse_option('close', 'apps', 'cat')
+        self.assertIn('start', self.plugin.paths)
+        self.assertEqual(self.plugin.paths['start'], set(['/bin/cat']))
+
+        self.plugin.parse_option('end_close', 'apps', 'cp')
+        self.assertIn('end', self.plugin.paths)
+        self.assertEqual(self.plugin.paths['end'], set(['/bin/cp']))
+
+        self.plugin.parse_option('timer_close', 'apps', 'cat')
+        self.assertIn('timer', self.plugin.paths)
+        self.assertEqual(self.plugin.paths['timer'], set(['/bin/cat']))
+
     def testDedupeOptionValue__parse_option(self):
         """ AppClose.parse_option: duplicate values for options are
             removed.
             """
         self.plugin.parse_option('close', 'apps', 'cat')
         self.plugin.parse_option('close', 'apps', 'cat')
-        self.assertEqual(self.plugin.paths, set(['/bin/cat']))
+        self.assertEqual(self.plugin.paths, dict(start=set(['/bin/cat'])))
 
     def testMultiValueOption__parse_option(self):
         """ AppClose.parse_option: options support multiple values.
             """
         self.plugin.parse_option('close', 'apps', 'cat', 'chmod')
         self.assertEqual(self.plugin.paths,
-            set(['/bin/cat', '/bin/chmod']))
+            dict(start=set(['/bin/cat', '/bin/chmod'])))
 
     def testOptionsSpacesAsName__parse_option(self):
         """ AppClose.parse_option: program arguments are treated as
@@ -202,7 +232,7 @@ class TestAppClose(CloseAppCase):
         with self.assertRaises(ValueError):
             self.plugin.parse_option('close', 'apps', 'cp notexist nowhere')
         self.plugin.parse_option('close', 'apps', 'cp')
-        self.assertEqual(self.plugin.paths, set(['/bin/cp']))
+        self.assertEqual(self.plugin.paths, dict(start=set(['/bin/cp'])))
 
     def testOptionValue_CommandsExist__parse_option(self):
         """ AppClose.parse_option: option values are existing commands.
@@ -216,7 +246,9 @@ class TestAppClose(CloseAppCase):
         """ AppClose.on_taskstart: configured running apps are closed.
             """
         def _method(path):
-            self.plugin.paths.add(path)
+            if not 'start' in self.plugin.paths:
+                self.plugin.paths['start'] = set()
+            self.plugin.paths['start'].add(path)
             self.plugin.on_taskstart(self.task)
         self.assertTrue(self._kill_app(_method, process_count=3))
 
@@ -238,14 +270,14 @@ class TestAppBlock(CloseAppCase):
             """
         self.plugin.parse_option('block', 'apps', 'cat')
         self.plugin.parse_option('block', 'apps', 'cat')
-        self.assertEqual(self.plugin.paths, set(['/bin/cat']))
+        self.assertEqual(self.plugin.paths, dict(block=set(['/bin/cat'])))
 
     def testMultiValueOption__parse_option(self):
         """ AppBlock.parse_option: options support multiple values.
             """
         self.plugin.parse_option('block', 'apps', 'cat', 'chmod')
         self.assertEqual(self.plugin.paths,
-            set(['/bin/cat', '/bin/chmod']))
+            dict(block=set(['/bin/cat', '/bin/chmod'])))
 
     def testOptionsSpacesAsName__parse_option(self):
         """ AppBlock.parse_option: program arguments are treated as
@@ -256,7 +288,7 @@ class TestAppBlock(CloseAppCase):
         with self.assertRaises(ValueError):
             self.plugin.parse_option('block', 'apps', 'cp notexist nowhere')
         self.plugin.parse_option('block', 'apps', 'cp')
-        self.assertEqual(self.plugin.paths, set(['/bin/cp']))
+        self.assertEqual(self.plugin.paths, dict(block=set(['/bin/cp'])))
 
     def testOptionValue_CommandsExist__parse_option(self):
         """ AppBlock.parse_option: option values are existing commands.
@@ -270,6 +302,8 @@ class TestAppBlock(CloseAppCase):
         """ AppBlock.on_taskrun: configured running apps are closed.
             """
         def _method(path):
-            self.plugin.paths.add(path)
+            if not 'block' in self.plugin.paths:
+                self.plugin.paths['block'] = set()
+            self.plugin.paths['block'].add(path)
             self.plugin.on_taskrun(self.task)
         self.assertTrue(self._kill_app(_method, process_count=3))

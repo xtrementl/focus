@@ -157,6 +157,8 @@ class MockTask(object):
 
         self.owner = os.getuid()
         self.duration = 10
+        self._total_duration = 0
+        self.elapsed = False
         self._loaded = False
 
     def load(self):
@@ -174,6 +176,9 @@ class MockTask(object):
         if not self._loaded:
             raise errors.NoActiveTask
         self._loaded = False
+
+    def set_total_duration(self, duration):
+        self._total_duration = duration
 
     def create(self, name, clone_task=None):
         if not hasattr(self, 'test__created'):
