@@ -37,6 +37,8 @@ Execute arbitrary shell commands useful for your task.
 Play Sounds
 -----------
 Play a sound after your task timer runs out or whenever you end the task.
+You can also play a sound when starting tasks, in case you want to get
+your groove on.
 
 **If these won't do it, Focus boasts a simple, yet powerful plugin system.
 More on this later.**
