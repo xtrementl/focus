@@ -54,13 +54,6 @@ def _print_tasks(env, tasks, mark_active=False):
         write('~' * 80)
         env.io.write('')
 
-        if not opts and not blks:
-            if invalid:
-                env.io.write('  Invalid task')
-            else:
-                env.io.write('  Empty task')
-            env.io.write('')
-
         # non-block options
         if opts:
             for opt, values in opts:
@@ -70,12 +63,28 @@ def _print_tasks(env, tasks, mark_active=False):
 
         # block options
         if blks:
+            had_options = False
+
             for block, options in blks:
-                env.io.write('    {{ {0} }}'.format(block))
-                for opt, values in options:
-                    env.io.write('        {0}: {1}'.format(opt,
-                                 ', '.join(str(v) for v in values)))
-                env.io.write('')
+                if options:
+                    had_options = True
+                    env.io.write('    {{ {0} }}'.format(block))
+
+                    for opt, values in options:
+                        env.io.write('        {0}: {1}'.format(opt,
+                                     ', '.join(str(v) for v in values)))
+                    env.io.write('')
+
+            if not had_options:
+                blks = None
+
+        if not opts and not blks:
+            if invalid:
+                env.io.write('  Invalid task.')
+            else:
+                env.io.write('  Empty task.')
+            env.io.write('')
+
 
 def _edit_task_config(env, task_config, confirm):
     """ Launches text editor to edit provided task configuration file.
