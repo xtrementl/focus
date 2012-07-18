@@ -160,7 +160,7 @@ class SettingLexer(object):
 
                 else:
                     self._state = self.ST_STRING
-                    self._last_quote = char  # store for quote later matching
+                    self._last_quote = char  # store for later quote matching
 
             if add_token:
                 # store token
