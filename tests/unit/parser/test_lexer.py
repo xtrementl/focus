@@ -244,8 +244,10 @@ class TestSettingLexer(FocusTestCase):
         self.lexer._state_info['state'] = self.lexer.ST_TOKEN
         self.lexer._token_info['chars'] = test_chars
         self.lexer._process_tokens('#')
-        self.assertEqual(self.lexer._tokens, [])
-        self.assertEqual(self.lexer._token_info['chars'], test_chars)
+        self.assertEqual(self.lexer._tokens, [
+            (self.lexer._token_info['line_no'], ''.join(test_chars))
+        ])
+        self.assertEqual(self.lexer._token_info['chars'], [])
         self.assertEqual(self.lexer._state_info['state'],
                          self.lexer.ST_COMMENT)
 

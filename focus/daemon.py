@@ -162,7 +162,7 @@ def shell_focusd(data_dir):
 
     # do any of the plugins need root access?
     # if so, wrap command with sudo to escalate privs, if not already root
-    needs_root = bool([p for p in plugins if p.needs_root])
+    needs_root = any(p for p in plugins if p.needs_root)
 
     if needs_root and os.getuid() != 0:  # only if not already root
         command = 'sudo ' + command

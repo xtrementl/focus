@@ -151,7 +151,6 @@ class SettingLexer(object):
             # start of comment
             elif char == self.COMMENT_START:
                 self._state = self.ST_COMMENT
-                return  # skip adding token char
 
             # start of quoted string
             elif char in self.QUOTES:
@@ -161,7 +160,7 @@ class SettingLexer(object):
 
                 else:
                     self._state = self.ST_STRING
-                    self._last_quote = char  # must be set *after* state update
+                    self._last_quote = char  # store for quote later matching
 
             if add_token:
                 # store token
