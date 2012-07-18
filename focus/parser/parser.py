@@ -25,8 +25,8 @@ class SettingParser(object):
             option    : NAME value ';'
             value     : TERM (',' TERM)*
             block     : NAME '{' option* '}'
-            TERM      : ^.+$
             NAME      : ^[a-zA-Z_][a-zA-Z0-9_]*$
+            TERM      : ^.+$
 
         where TERM has some additional constraints:
             a) Spaces, quotes, and token characters (i.e. {};,) must be escaped
@@ -47,11 +47,15 @@ class SettingParser(object):
             b) Strings can be either double or single-quoted; they just have to
                match. Within the string, the quote character can be escaped
                with the "\" char (i.e. \" for double quotes, \' for single).
-               The escape char '\' may be used by itself or in double to
-               represent one '\'.
 
                For example:
                     name "John \"W\" Smith, III";
+
+               The escape char '\' may be used by itself or in double to
+               represent one '\'.
+
+               Example:
+                    php_fug_namespace "$var = new A\\B\\FooBar();";
 
                Note, sometimes double escaping must be used to indicate a
                single escape char if adjacent to quote characters.
@@ -265,28 +269,45 @@ class SettingParser(object):
         """ Parses the production rule::
                 container : NAME '{' (option | block)* '}' EOF
 
-            Returns tuple (name, options_list, blocks_list).
+            Returns tuple (type_name, options_list, blocks_list).
             """
 
-        name = self._get_token(self.RE_NAME)
+        type_name = self._get_token(self.RE_NAME)
         self._expect_token('{')
 
         # consume elements if available
         options = []
         blocks = []
+        dupe_blocks = {}
 
         while self._lookahead_token() != '}':
             # is it a block?
             if self._lookahead_token(count=2) == '{':
-                blocks.append(self._rule_block())
+                block = self._rule_block()
+                name = block[0]
+
+                # duplicate found, hold for replace
+                if name in self._block_map:
+                    dupe_blocks[name] = block
+                else:
+                    # update block index and add to block list
+                    self._block_map[name] = len(blocks) 
+                    blocks.append(block)
+
             else:
-                # otherwise, let's go with option
+                # otherwise, let's go with non-block option
                 options.append(self._rule_option())
+
+        # replace duplicate block definitions
+        if dupe_blocks:
+            for name, block in dupe_blocks.iteritems():
+                block_idx = self._block_map[name]
+                blocks[block_idx] = block
 
         self._expect_token('}')
         self._expect_empty()
 
-        return [name, options, blocks]
+        return [type_name, options, blocks]
 
     def _rule_option(self):
         """ Parses the production rule::
@@ -554,7 +575,9 @@ class SettingParser(object):
                 raise ValueError(u"Option '{0}' does not exist"
                                  .format(common.from_utf8(name)))
 
-            self._ast[2][block_idx][1].pop(item_idx)
+            # pop off the block option
+            options = self._ast[2][block_idx][1]
+            options.pop(item_idx)
 
         else:
             if not self._ast:
@@ -570,6 +593,7 @@ class SettingParser(object):
                 raise ValueError(u"Option '{0}' does not exist"
                                  .format(common.from_utf8(name)))
 
+            # pop off non-block option
             self._ast[1].pop(item_idx)
 
     def add_block(self, name):

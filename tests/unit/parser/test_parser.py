@@ -18,6 +18,27 @@ _TEST_DATA = """header_value {
 }
 """
 
+_TEST_DUPEBLK_DATA = """header_value {
+    option "12345";
+    block_name {
+        option "name";
+        option "name 2";
+    }
+    block_name2 {
+        option "name 4";
+    }
+    block_name2 {
+        option "name 5";
+    }
+    block_name {
+        option "name 3";
+    }
+    block_name3 {
+        option "name 6";
+    }
+}
+"""
+
 
 class TestSettingParser(FocusTestCase):
     def _get_expected_tokens(self):
@@ -133,13 +154,32 @@ class TestSettingParser(FocusTestCase):
         with self.assertRaises(parser.ParseError):
             self.parser._expect_empty()
 
-    def test___rule_container(self):
+    def testNormal___rule_container(self):
         """ SettingParser._rule_container: parses container rule.
             """
         self.assertEqual(self.parser._rule_container(),
             ['header_value',
              [['option', ['12345']]],
              [['block_name', [['option', ['name']], ['option', ['name 2']]]]]
+            ]
+        )
+
+    def testDupeBlock___rule_container(self):
+        """ SettingParser._rule_container: parses container rule with
+            duplicate blocks and dedupes them.
+            """
+
+        self.stream = StringIO(_TEST_DUPEBLK_DATA)
+        self.parser = parser.SettingParser()
+        self.parser._lexer = parser.SettingLexer()
+        self.parser._lexer.readstream(self.stream)
+
+        self.assertEqual(self.parser._rule_container(),
+            ['header_value',
+             [['option', ['12345']]],
+             [['block_name', [['option', ['name 3']]]],
+              ['block_name2', [['option', ['name 5']]]],
+              ['block_name3', [['option', ['name 6']]]]]
             ]
         )
 
@@ -344,6 +384,21 @@ class TestSettingParser(FocusTestCase):
         self.parser = parser.SettingParser()
         with self.assertRaises(ValueError):
             self.parser.remove_option('non_exist', 'option_name')
+
+    def testReadFileBlockNotExist__remove_option(self):
+        """ SettingParser.remove_option: removing option from existent
+            block after reading from file.
+            """
+        filename = self.make_file()
+        with open(filename, 'w', 0) as f:
+            f.write(_TEST_DATA)
+
+        self.parser = parser.SettingParser(filename)
+        self.parser.remove_option('block_name', 'option')
+        self.parser.remove_option('block_name', 'option')
+
+        with self.assertRaises(ValueError):
+            self.parser.remove_option('block_name', 'option')
 
     def testNonBlockOptionExist__remove_option(self):
         """ SettingParser.remove_option: removing option.
