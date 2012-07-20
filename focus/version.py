@@ -10,7 +10,7 @@ def compare_version(value):
 
         `value`
             Version comparison string (e.g. ==1.0, <=1.0, >1.1)
-                Supported operatorators:
+                Supported operators:
                     <, <=, ==, >, >=
         """
 

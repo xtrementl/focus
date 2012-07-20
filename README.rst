@@ -253,6 +253,19 @@ The ``block`` option under the ``sites`` block allows for blocking website
 domains while the task is active. Each option supports one or more domain
 values. The option may be redefined multiple times.
 
+Under the hood, Focus updates the system HOSTS file (/etc/hosts) with mappings
+of the provided domains to the local machine. Because of this, you will have to
+provide an entry for each relevant subdomain as well if necessary. As a result,
+this strategy won't scale when blocking a site with numerous subdomains.
+Perhaps, another solution like a local DNS server would be more appropriate
+(e.g. `dnsmasq <http://www.thekelleys.org.uk/dnsmasq/doc.html>`_).
+
+As a convenience, any domains configured will also map the following
+subdomains: ``m``, ``www``, ``mobile``.
+
+For example::
+
+    google.com => www.google.com, m.google.com, mobile.google.com
 
 Plugin System
 =============
