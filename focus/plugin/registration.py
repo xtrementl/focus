@@ -216,7 +216,7 @@ def get_registered(option_hooks=None, event_hooks=None,
         `root_access`
             Boolean to include or exclude root plugins.
         `task_active`
-            Set to ``False`` to indicate no active tasks.
+            Set to ``False`` to not filter by task-based plugins.
 
         Returns list of ``Plugin`` instances.
         """

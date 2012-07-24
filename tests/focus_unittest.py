@@ -5,12 +5,14 @@ import shutil
 import tempfile
 import subprocess
 
+IS_MACOSX = sys.platform.lower().startswith('darwin')
+
 # check for unittest
 if sys.version_info[:2] < (2, 7):
     try:
         # workaround using unittest2 for python<2.7
         from unittest2 import (
-            TestCase, TestLoader, TextTestRunner, skipUnless
+            TestCase, TestLoader, TextTestRunner, skipUnless, skipIf
         )
 
     except ImportError:
@@ -20,7 +22,7 @@ if sys.version_info[:2] < (2, 7):
 
 else:  # 2.7+
     from unittest import (
-        TestCase, TestLoader, TextTestRunner, skipUnless
+        TestCase, TestLoader, TextTestRunner, skipUnless, skipIf
     )
 
 # check for psutil
@@ -42,12 +44,12 @@ except ImportError:
 # update sys.path with our lib dir, so libs are available
 LIB_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path.insert(0, LIB_DIR)
-
 from focus import errors
 
 
-__all__ = ('skipUnless', 'TestCase', 'TestLoader', 'TextTestRunner',
-           'FocusTestCase', 'MockIOStream', 'MockTask', 'MockEnvironment')
+__all__ = ('IS_MACOSX', 'skipUnless', 'skipIf', 'TestCase', 'TestLoader',
+           'TextTestRunner', 'FocusTestCase', 'MockIOStream', 'MockTask',
+           'MockEnvironment')
 
 
 class FocusTestCase(TestCase):

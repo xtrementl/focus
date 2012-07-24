@@ -40,17 +40,21 @@ Play a sound after your task timer runs out or whenever you end the task.
 You can also play a sound when starting tasks, in case you want to get
 your groove on.
 
-**If these won't do it, Focus boasts a simple, yet powerful plugin system.
-More on this later.**
+Update IM Status
+----------------
+Update the account status for your favorite instant messenger (IM) applications
+while you work. Focus supports `Pidgin <http://www.pidgin.im/>`_,
+`Empathy <https://live.gnome.org/Empathy>`_, and
+`Skype <http://www.skype.com>`_ on Linux and `Adium <http://adium.im/>`_ and
+`Skype <http://www.skype.com>`_ on Mac OSX.
+
+**If these features won't do it for you, Focus boasts a simple, yet powerful
+plugin system. More on this later.**
 
 Installation
 ============
 
     $ sudo pip install focus
-
-or if you really must (but you shouldn't):
-
-    $ sudo easy_install focus
 
 or from source:
 
@@ -64,6 +68,7 @@ should handle taking care of installing them if not available.
 
 * psutil >= 0.4.1
 * argparse (Python <2.7)
+* dbus (Linux only)
 
 Optional External Dependencies
 ------------------------------
@@ -234,24 +239,19 @@ For example: ::
         timer_close /path/to/file; # close app at task end (timer elapsed)
     }
 
-Playing Sounds
---------------
-
-The ``play`` option for either block supports the path to a sound file that
-is playable on your system via available external binaries (``mpg123``,
-``play``, and ``aplay`` [WAV only]). Only a single value is supported, and the
-option cannot be defined more than once. Make sure your preferred binary is
-installed and works correctly by manually running your sound file through the
-program.
-
-*Note: the option supports the "end_" and "timer_" prefixed versions.*
-
-Blocking Sites
---------------
+Blocking Websites
+-----------------
 
 The ``block`` option under the ``sites`` block allows for blocking website
 domains while the task is active. Each option supports one or more domain
 values. The option may be redefined multiple times.
+
+For example: ::
+
+    sites {
+        block google.com, twitter.com;
+        block youtube.com, "othersite.com";
+    }
 
 Under the hood, Focus updates the system HOSTS file (/etc/hosts) with mappings
 of the provided domains to the local machine. Because of this, you will have to
@@ -265,7 +265,81 @@ subdomains: ``m``, ``www``, ``mobile``.
 
 For example::
 
-    google.com => www.google.com, m.google.com, mobile.google.com
+    google.com => google.com, www.google.com, m.google.com, mobile.google.com
+
+Playing Sounds
+--------------
+
+The ``play`` option for either block supports the path to a sound file that
+is playable on your system via available external binaries (``mpg123``,
+``play``, and ``aplay`` [WAV only]). Only a single value is supported, and the
+option cannot be defined more than once. Make sure your preferred binary is
+installed and works correctly by manually running your sound file through the
+program.
+
+For example: ::
+
+    sounds {
+        play /path/to/file;        # play sound file at task start
+        end_play /path/to/file;    # play sound file at task end (manual)
+        timer_play /path/to/file;  # play sound file at task end (manual)
+    }
+
+Updating IM Status
+------------------
+
+The ``im`` block allows for options to update the status information for
+a number of running instant messenger applications.
+
+The ``status_msg`` option supports defining a name that can be referenced when
+specifying the ``status``, ``end_status`` and ``timer_status`` options. The
+option takes two arguments: the first being the identifier name, and the second,
+the value for the status message. The option can be defined more than once to
+define multiple status messages to use.
+
+For example::
+
+    im {
+        status_msg message_name value;
+        status_msg brb brb;
+        status_msg brb2 be\ right\ back;
+        status_msg omg "oh em gee";
+        status_msg working "definitely busy here..";
+    }
+
+The ``status`` option is activated at the start of a task, and it accepts
+either the new status, or both the new status and new status message as
+arguments.
+
+For the status argument, the following values are available ::
+
+    'online'    - Online/Available
+    'away'      - Away
+    'long_away' - Extended Away
+    'busy'      - Busy
+    'hidden'    - Hidden/Invisible
+
+For the optional message argument, a string value may be provided. To reference
+an existing ``status_msg`` option definition, simply provide the ``status_msg``
+name prefixed with ":" (e.g. :working, :brb, :omg). The ``status`` option also
+supports the "end_" and "timer_" prefixes which will instead be activated when
+a task is manually ended or after the timer elapses, respectively.
+
+For example: ::
+
+    im {
+        status_msg working "definitely busy here...";
+        status busy :working;       # change status at task start
+
+        #status away;
+        #status busy really\ busy;
+        #status busy "don't bother";
+        end_status online;          # change status at task end (manual)
+        timer_status online;        # change status at task end (timer elapsed)
+
+        status_msg play "reading some twitters";
+        #status away :play;
+    }
 
 Plugin System
 =============
