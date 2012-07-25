@@ -297,7 +297,7 @@ option takes two arguments: the first being the identifier name, and the second,
 the value for the status message. The option can be defined more than once to
 define multiple status messages to use.
 
-For example::
+For example: ::
 
     im {
         status_msg message_name value;
@@ -311,7 +311,7 @@ The ``status`` option is activated at the start of a task, and it accepts
 either the new status, or both the new status and new status message as
 arguments.
 
-For the status argument, the following values are available ::
+For the status argument, the following values are available: ::
 
     'online'    - Online/Available
     'away'      - Away
