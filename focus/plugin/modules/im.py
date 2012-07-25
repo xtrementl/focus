@@ -285,7 +285,8 @@ def _osx_skype_status(status, message):
 
         #   main loop
         #   * while security dialog is shown or app is loading
-        #   * fetch user status to determine if in pending state
+        #   ** fetch user status to determine if in pending state
+        #   ** run auto-approve if still in pending state
 
         #   set status command
         #   set status message (mood)
