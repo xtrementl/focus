@@ -147,7 +147,7 @@ def _adium_status(status, message):
     #  * also set status message, if provided
     script = """
      tell application "System Events"
-      if exists application process "Adium" then
+      if exists process "Adium" then
        tell application "Adium" to go {0}""".format(code)
 
     if message:
@@ -295,7 +295,7 @@ def _osx_skype_status(status, message):
           tell application "System Events"
             set vis to the visible of process "Skype"
             set visible of process "Skype" to false
-            tell application process "Skype"
+            tell process "Skype"
               set winName to "Skype API Security"
               set rdoBtn to "Allow this application to use Skype"
               if exists (radio button rdoBtn of radio group 1 of window {LC}
