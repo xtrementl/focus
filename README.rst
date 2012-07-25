@@ -300,11 +300,11 @@ define multiple status messages to use.
 For example: ::
 
     im {
-        status_msg message_name value;
-        status_msg brb brb;
-        status_msg brb2 be\ right\ back;
-        status_msg omg "oh em gee";
-        status_msg working "definitely busy here..";
+        status_msg message_name, value;
+        status_msg brb, brb;
+        status_msg brb2, be\ right\ back;
+        status_msg omg, "oh em gee";
+        status_msg working, "definitely busy here..";
     }
 
 The ``status`` option is activated at the start of a task, and it accepts
@@ -328,17 +328,17 @@ a task is manually ended or after the timer elapses, respectively.
 For example: ::
 
     im {
-        status_msg working "definitely busy here...";
-        status busy :working;       # change status at task start
+        status_msg working, "definitely busy here...";
+        status busy, :working;       # change status at task start
 
         #status away;
-        #status busy really\ busy;
-        #status busy "don't bother";
+        #status busy, really\ busy;
+        #status busy, "don't bother";
         end_status online;          # change status at task end (manual)
         timer_status online;        # change status at task end (timer elapsed)
 
-        status_msg play "reading some twitters";
-        #status away :play;
+        status_msg play, "reading some twitters";
+        #status away, :play;
     }
 
 Plugin System
