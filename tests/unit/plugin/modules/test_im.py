@@ -6,20 +6,17 @@ import subprocess
 
 from focus.plugin.modules import im as plugins
 from focus_unittest import (
-    FocusTestCase, MockTask, IS_MACOSX, skipUnless, skipIf
+    FocusTestCase, IS_MACOSX, skipUnless, skipIf
 )
 
 
 class IMStatusCase(FocusTestCase):
     def setUp(self):
         super(IMStatusCase, self).setUp()
-        self.setup_dir()
-        self.task = MockTask()
         self.plugin = plugins.IMStatus()
 
     def tearDown(self):
         self.plugin = None
-        self.task = None
         super(IMStatusCase, self).tearDown()
 
     def testValidStatusType__parse_option(self):
