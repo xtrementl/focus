@@ -190,7 +190,7 @@ def _empathy_status(status, message):
                 # fetch account interface
                 account = _dbus_get_object(ACCT_MAN_IFACE, account_path)
 
-                # skip disconnected
+                # skip disconnected, disabled, etc.
                 if account.Get(ACCT_IFACE, 'ConnectionStatus') != 0:
                     continue
 
