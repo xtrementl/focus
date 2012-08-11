@@ -118,6 +118,8 @@ class IOStream(object):
                 Append newline character to buffer before writing.
             """
 
+        buf = buf or ''
+
         if newline:
             buf += os.linesep
 
@@ -154,6 +156,8 @@ class IOStream(object):
             `newline`
                 Append newline character to buffer before writing.
             """
+
+        buf = buf or ''
 
         if self._colored:
             buf = self.ESCAPE_RED + buf + self.ESCAPE_CLEAR
