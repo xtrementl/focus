@@ -33,6 +33,7 @@ def _is_plugin_disabled(plugin):
     _, props = item
     return bool(props.get('disabled'))
 
+
 def _setup_command(plugin):
     """ Handles setup or teardown of command hook registration for the provided
         plugin.
@@ -278,6 +279,7 @@ def get_command_hook(command, task_active=True):
 
     return None
 
+
 def run_event_hooks(event, task):
     """ Executes registered task event plugins for the provided event and task.
 
@@ -310,6 +312,7 @@ def run_event_hooks(event, task):
                     except Exception:
                         # TODO: log these issues for plugin author or user
                         pass
+
 
 def run_option_hooks(parser, disable_missing=True):
     """ Executes registered plugins using option hooks for the provided

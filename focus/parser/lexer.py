@@ -111,9 +111,8 @@ class SettingLexer(object):
             #   2) not escaped quote (e.g. "hey there" vs "hey there\")
             #   3) actual escape char prior (e.g. "hey there\\")
 
-            if char == self._last_quote and (
-                    not self._escaped or self._double_escaped
-                ):
+            if (char == self._last_quote and
+                    not self._escaped or self._double_escaped):
 
                 # store token
                 self._new_token()
@@ -136,10 +135,8 @@ class SettingLexer(object):
         """ Process a token character.
             """
 
-        if (char in self.WHITESPACE or
-            char == self.COMMENT_START or
-            char in self.QUOTES or
-            char in self.TOKENS):
+        if (char in self.WHITESPACE or char == self.COMMENT_START or
+                char in self.QUOTES or char in self.TOKENS):
 
             add_token = True
 

@@ -21,7 +21,7 @@ class Timer(base.Plugin):
         # Example: duration 30;
 
         {
-            'name': 'duration',      
+            'name': 'duration',
             'allow_duplicates': False
         }
     ]

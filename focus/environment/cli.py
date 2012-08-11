@@ -136,9 +136,10 @@ class CLI(object):
         usage_str = 'focus [-h] [-v] [--no-color] <command> [<args>]'
 
         # setup parser
-        parser = FocusArgParser(description='Command-line productivity tool for improved task workflows.',
-                                epilog="See 'focus help <command>' for more "
-                                       "information on a specific command.",
+        parser = FocusArgParser(description=("Command-line productivity tool "
+                                             "for improved task workflows."),
+                                epilog=("See 'focus help <command>' for more "
+                                        "information on a specific command."),
                                 usage=usage_str)
 
         parser.add_argument('-v', '--version', action='version',
@@ -167,6 +168,7 @@ class CLI(object):
 
         # install 'version' subparser
         version_parser = subparsers.add_parser('version', add_help=False)
+
         def _print_version(env, args):
             env.io.write(version_str)
             return True
@@ -180,7 +182,7 @@ class CLI(object):
                                                add_help=False)
 
             # use wrapper to bind command value and passthru to _handle_command
-            # when exexcuted later
+            # when executed later
             def _run(command):
                 def _wrapper(env, args):
                     return self._handle_command(command, env, args)

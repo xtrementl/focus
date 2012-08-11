@@ -242,7 +242,7 @@ class AppClose(base.Plugin):
 
         # treat arguments as part of the program name (support spaces in name)
         values = [x.replace(' ', '\\ ') if not x.startswith(os.sep) else x
-                     for x in [str(v) for v in values]]
+                  for x in [str(v) for v in values]]
 
         if option == 'close':
             option = 'start_' + option

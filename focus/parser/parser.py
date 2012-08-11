@@ -291,7 +291,7 @@ class SettingParser(object):
                     dupe_blocks[name] = block
                 else:
                     # update block index and add to block list
-                    self._block_map[name] = len(blocks) 
+                    self._block_map[name] = len(blocks)
                     blocks.append(block)
 
             else:
@@ -489,7 +489,7 @@ class SettingParser(object):
                 for option, value_list in option_list:
                     vals = serialize_values(value_list)
                     stream.write('        {0} {1};{2}'
-                        .format(option, vals, os.linesep))
+                                 .format(option, vals, os.linesep))
 
                 # write inner closing }
                 stream.write('    }}{0}'.format(os.linesep))

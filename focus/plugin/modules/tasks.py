@@ -163,7 +163,7 @@ def _edit_task_config(env, task_config, confirm):
                         resp = resp.strip().lower()
                     except KeyboardInterrupt:
                         return True
-                    
+
                     if resp == 'y':
                         break
                     elif resp == 'n':
@@ -411,6 +411,7 @@ class TaskRemove(base.Plugin):
             except KeyboardInterrupt:
                 pass
 
+
 class TaskList(base.Plugin):
     """ Lists all available tasks and related information.
         """
@@ -502,5 +503,3 @@ class TaskView(base.Plugin):
             raise errors.TaskNotFound(task_name)
 
         _print_tasks(env, tasks)
-
-

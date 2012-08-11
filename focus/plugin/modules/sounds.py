@@ -63,10 +63,9 @@ class PlaySound(base.Plugin):
                     return name
         return None  # couldn't find a player
 
-
     def _play_sound(self, filename):
         """ Shells player with the provided filename.
-            
+
             `filename`
                 Filename for sound file.
             """
@@ -107,7 +106,7 @@ class PlaySound(base.Plugin):
         ext = os.path.splitext(value)[1].lower()
         if ext != 'wav' and self._get_external_player() == 'aplay':
             raise ValueError(u"Only WAV sound file "
-                              "supported for 'aplay'")
+                             "supported for 'aplay'")
 
         if option == 'play':
             option = 'start_' + option

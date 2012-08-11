@@ -35,17 +35,17 @@ class Task(object):
         self._default_task_config = '/etc/focus_task.cfg'
 
         self._paths = {
-           # base working directory
-           'base_dir': base_dir,
+            # base working directory
+            'base_dir': base_dir,
 
-           # stores info about currently active task
-           'active_file': os.path.join(base_dir, '.active.cfg'),
+            # stores info about currently active task
+            'active_file': os.path.join(base_dir, '.active.cfg'),
 
-           # base directory for tasks
-           'task_dir': None,
+            # base directory for tasks
+            'task_dir': None,
 
-           # current task configuration file
-           'task_config': None
+            # current task configuration file
+            'task_config': None
         }
 
     def _reset(self):
@@ -322,7 +322,7 @@ class Task(object):
 
             else:
                 task_names = [name for name in os.listdir(tasks_dir)
-                                if os.path.isdir(os.path.join(tasks_dir, name))]
+                              if os.path.isdir(os.path.join(tasks_dir, name))]
                 task_names.sort()
 
             for name in task_names:
@@ -480,7 +480,8 @@ class Task(object):
 
         delta = datetime.datetime.now() - self._start_time
         total_secs = (delta.microseconds +
-                (delta.seconds + delta.days * 24 * 3600) * 10 ** 6) / 10 ** 6
+                      (delta.seconds + delta.days * 24 * 3600) *
+                      10 ** 6) / 10 ** 6
 
         return max(0, int(round(total_secs / 60.0)))
 

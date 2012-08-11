@@ -72,6 +72,7 @@ class PluginImport(FocusError):
 
         super(PluginImport, self).__init__(self.description)
 
+
 class UserPluginImport(PluginImport):
     """ An error occurred while loading a user plugin.
         """
@@ -84,6 +85,7 @@ class UserPluginImport(PluginImport):
             self.description += u': ' + common.from_utf8(description)
 
         super(UserPluginImport, self).__init__(self.description)
+
 
 class ActiveTask(FocusError):
     """ An active task is already running.
@@ -110,6 +112,7 @@ class TaskNotFound(FocusError):
 
         super(TaskNotFound, self).__init__(self.description)
 
+
 class TaskExists(FocusError):
     """ Specified task already exists.
         """
@@ -131,7 +134,7 @@ class InvalidTaskConfig(FocusError):
         self.filename = common.from_utf8(filename)
         self.reason = common.from_utf8(reason)
         self.description = (u'Invalid task config "{0}",{1}   reason: {2}'
-                        .format(filename, os.linesep, reason))
+                            .format(filename, os.linesep, reason))
 
         super(InvalidTaskConfig, self).__init__(self.description)
 

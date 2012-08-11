@@ -109,7 +109,7 @@ class Environment(object):
             """
         dirs = [self._data_dir]
         dirs += [os.path.join(self._data_dir, name) for name
-                    in self.DATA_SUBDIRS]
+                 in self.DATA_SUBDIRS]
 
         for path in dirs:
             if not os.path.isdir(path):

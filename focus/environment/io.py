@@ -43,7 +43,7 @@ class IOStream(object):
             """ Flushes nothing.
                 """
             pass
-        
+
         def isatty(self):
             """ Not a terminal.
                 """

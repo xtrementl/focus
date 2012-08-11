@@ -36,7 +36,7 @@ class SiteBlock(base.Plugin):
         {
             'block': 'sites',
             'options': [
-                { 'name': 'block' }
+                {'name': 'block'}
             ]
         }
     ]
@@ -162,7 +162,7 @@ class SiteBlock(base.Plugin):
                     # for good measure. note, this check fails for
                     # multi-part TLDs, e.g. .co.uk
                     domain = _RE_WWW_SUB.sub('', domain)  # strip "www."
-                    
+
                     if len(domain.split('.')) == 2:
                         for sub in _extra_subs:
                             self.domains.add('{0}.{1}'.format(sub, domain))

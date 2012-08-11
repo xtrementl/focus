@@ -181,7 +181,7 @@ def extract_app_paths(values, app_should_exist=True):
 
         # quote params with spaces in value
         parts[:] = ['"{0}"'.format(p.replace('"', '\\"'))
-                        if ' ' in p else p for p in parts]
+                    if ' ' in p else p for p in parts]
 
         # add flattened path
         paths.add(' '.join(parts))
@@ -219,7 +219,7 @@ def shell_process(command, input_data=None, background=False, exitcode=False):
         # kick off the process
         kwargs = {
             'shell': isinstance(command, basestring),
-            'stdout': subprocess.PIPE, 
+            'stdout': subprocess.PIPE,
             'stderr': subprocess.PIPE
         }
         if not input_data is None:
