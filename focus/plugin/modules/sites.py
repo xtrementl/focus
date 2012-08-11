@@ -15,6 +15,7 @@ from focus.plugin import base
 
 _RE_PROTOCOL = re.compile(r'(?:(ht|f)tp(s?)\:\/\/)')
 _RE_TLD = re.compile(r'((?:\.[a-zA-Z]{2,6}){1,2})$')
+_RE_WWW_SUB = re.compile(r'^www\.')
 
 
 class SiteBlock(base.Plugin):
@@ -147,7 +148,7 @@ class SiteBlock(base.Plugin):
             value = value.lower()
 
             # if it doesn't look like a protocol, assume http
-            # (e.g. only domainsupplied)
+            # (e.g. only domain supplied)
             if not _RE_PROTOCOL.match(value):
                 value = 'http://' + value
 
@@ -160,7 +161,8 @@ class SiteBlock(base.Plugin):
                     # doesn't have subdomain, tack on www, m, and mobile
                     # for good measure. note, this check fails for
                     # multi-part TLDs, e.g. .co.uk
-
+                    domain = _RE_WWW_SUB.sub('', domain)  # strip "www."
+                    
                     if len(domain.split('.')) == 2:
                         for sub in _extra_subs:
                             self.domains.add('{0}.{1}'.format(sub, domain))

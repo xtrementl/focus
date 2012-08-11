@@ -68,11 +68,14 @@ class TestSiteBlock(FocusTestCase):
     def testMultiValueOption__parse_option(self):
         """ SiteBlock.parse_option: options support multiple values.
             """
-        self.plugin.parse_option('block', 'sites', 'google.com', 'twitter.com')
+        self.plugin.parse_option('block', 'sites', 'www.reddit.com',
+                                 'google.com', 'twitter.com')
         self.assertEqual(self.plugin.domains,
-            set(['google.com', 'm.google.com', 'www.google.com',
-                 'mobile.google.com', 'twitter.com', 'm.twitter.com',
-                 'www.twitter.com', 'mobile.twitter.com']))
+            set(['reddit.com', 'm.reddit.com', 'www.reddit.com',
+                 'mobile.reddit.com', 'google.com', 'm.google.com',
+                 'www.google.com', 'mobile.google.com', 'twitter.com',
+                 'm.twitter.com', 'www.twitter.com', 'mobile.twitter.com'
+                ]))
 
     def test__on_taskrun(self):
         """ SiteBlock.on_taskrun: adds domain blocks to hosts file.
