@@ -23,8 +23,7 @@ class _PluginMeta(type):
         super(_PluginMeta, cls).__init__(name, bases, attrs)
 
         # check if class is instance of meta base
-        parents = [b for b in bases if isinstance(b, _PluginMeta)]
-        if parents:
+        if any([b for b in bases if isinstance(b, _PluginMeta)]):  # parents
             # Doesn't have all the required attributes, bail.
             for attr in _REQUIRED_ATTRIBS:
                 if not attrs.get(attr):

@@ -217,9 +217,14 @@ def shell_process(command, input_data=None, background=False, exitcode=False):
 
     try:
         # kick off the process
-        proc = subprocess.Popen(command, shell=isinstance(command, basestring),
-                                stdout=subprocess.PIPE, stdin=subprocess.PIPE,
-                                stderr=subprocess.PIPE)
+        kwargs = {
+            'shell': isinstance(command, basestring),
+            'stdout': subprocess.PIPE, 
+            'stderr': subprocess.PIPE
+        }
+        if not input_data is None:
+            kwargs['stdin'] = subprocess.PIPE
+        proc = subprocess.Popen(command, **kwargs)
 
         # background exits without checking anything
         if not background:
