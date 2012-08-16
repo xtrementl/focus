@@ -149,7 +149,8 @@ class Stats(base.Plugin):
                         data = json.loads(file_.read())
 
                     # sort descending by time
-                    stats.append((date, sorted(data.iteritems(), key=lambda x: x[1],
+                    stats.append((date, sorted(data.iteritems(),
+                                               key=lambda x: x[1],
                                                reverse=True)))
 
                 except (json.JSONDecodeError, OSError):
