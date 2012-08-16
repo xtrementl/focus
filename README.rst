@@ -48,6 +48,11 @@ while you work. Focus supports `Pidgin <http://www.pidgin.im/>`_,
 `Skype <http://www.skype.com>`_ on Linux and `Adium <http://adium.im/>`_ and
 `Skype <http://www.skype.com>`_ on Mac OSX.
 
+Track Your Time
+---------------
+Keep tabs on how long you work on tasks per day. Focus will record your time
+automatically and present your time as a simple report.
+
 **If these features won't do it for you, Focus boasts a simple, yet powerful
 plugin system. More on this later.**
 
@@ -164,6 +169,24 @@ minutes.
 
 *Note: this command is only available if the active task has defined the
 duration option.*
+
+Show Available Usage Statistics
+-------------------------------
+
+    $ focus stat [start]
+
+This commands prints the daily task usage summaries, broken out per task, for
+every day from the starting period through the current day.
+
+The starting period supports the following values ::
+
+    today, t
+    yesterday, y
+    {n}d, {n}day, {n} day, {n}days, {n} days, {n} day ago, {n} days ago
+    {n}w, {n}wk, {n}week, {n}weeks, {n} week ago, {n} weeks ago
+
+where {n} is replaced with a number (e.g. ``1d`` for 1 day ago to today).
+If no starting period is provided, then ``today`` will be used.
 
 Task Configuration
 ==================

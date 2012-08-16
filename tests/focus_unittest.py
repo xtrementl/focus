@@ -259,9 +259,9 @@ class MockEnvironment(object):
 
     def __init__(self, data_dir=None, args=None):
         self.io = MockIOStream()
-        self.task = MockTask()
         self.args = args or []
         self.data_dir = data_dir or '/tmp'
+        self.task = MockTask(base_dir = self.data_dir)
         self.loaded = False
 
     def load(self):
