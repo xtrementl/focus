@@ -107,9 +107,6 @@ class Stats(base.Plugin):
             elif value in ('w', 'wk', 'week', 'last week'):
                 kwargs['days'] = -7
 
-            elif value in ('m', 'mon', 'month', 'last month'):
-                kwargs['months'] = -1
-
             else:
                 # match days
                 match = re.match(r'(\d+)\s*(d|day|days)\s*(ago)?$', value)

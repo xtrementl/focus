@@ -183,6 +183,7 @@ The starting period supports the following values ::
     today, t
     yesterday, y
     {n}d, {n}day, {n} day, {n}days, {n} days, {n} day ago, {n} days ago
+    w, wk, week, last week
     {n}w, {n}wk, {n}week, {n}weeks, {n} week ago, {n} weeks ago
 
 where {n} is replaced with a number (e.g. ``1d`` for 1 day ago to today).
