@@ -69,7 +69,7 @@ class Stats(base.Plugin):
             try:
                 file_.seek(0)
                 data = json.loads(file_.read())
-            except (json.JSONDecodeError, OSError):
+            except (ValueError, OSError):
                 data = {}
 
             # update task stats
@@ -82,7 +82,7 @@ class Stats(base.Plugin):
                 file_.seek(0)
                 file_.truncate(0)
                 file_.write(json.dumps(data))
-            except (json.JSONEncodeError, OSError):
+            except (ValueError, OSError):
                 pass
 
     def _fuzzy_time_parse(self, value):
