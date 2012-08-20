@@ -38,7 +38,7 @@ _focus() {
     # all available commands
     if [ $args -eq 0 ]; then
         local commands="$(focus --help | sed 's/[ \t]*//' | \
-            grep $'^[A-Za-z0-9][^\:-\']*$' | cut -d' ' -f1)"
+            grep $'^[A-Za-z0-9]\+[[:space:]]\{2,\}' | cut -d' ' -f1)"
         COMPREPLY=($(compgen -W "$commands" -- "$cur"))
 
     # specific command task completion
