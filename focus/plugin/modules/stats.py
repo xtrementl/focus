@@ -185,7 +185,7 @@ class Stats(base.Plugin):
             return time_str
 
         if not stats:
-            env.io.error('No stats to display')
+            env.io.write('No stats found.')
             return
 
         for date, tasks in stats:
