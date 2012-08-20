@@ -1,0 +1,74 @@
+# bash completion for focus
+
+have focus &&
+_focus_get_tasks() {
+    local cur=$1 IFS=$'\n' i j
+    _compopt_o_filenames
+
+    i=0
+    for j in $(compgen -d ~/.focus/tasks/$cur); do
+        if [ -f "$j/task.cfg" ]; then
+            COMPREPLY[i++]=${j##*/}
+        fi
+    done
+
+    return 0
+} &&
+
+_focus() {
+    COMPREPLY=()
+    local prev cur words
+    _get_comp_words_by_ref cur prev
+    _count_args
+    args=$(($args-1))
+
+    # check for flags
+    if [[ $cur == -* ]]; then
+        local command=$([ $args -gt 0 ] && \
+                      (_get_first_arg; echo "$1 $arg") || echo "$1")
+        COMPREPLY=($(compgen -W "$(_parse_help $command -h)" -- "$cur"))
+        return 0;
+    fi
+    case "$prev" in  # bail for prior version/help flags
+        -'?'|-h|--help|-v|--version)
+            return 0
+            ;;
+    esac
+
+    # all available commands
+    if [ $args -eq 0 ]; then
+        local commands="$(focus --help | sed 's/[ \t]*//' | \
+            grep $'^[A-Za-z0-9][^\:-\']*$' | cut -d' ' -f1)"
+        COMPREPLY=($(compgen -W "$commands" -- "$cur"))
+
+    # specific command task completion
+    else
+        _get_first_arg
+        case $args in
+            1) case "$arg" in
+                   alter|destroy|make|on|rename|view)
+                   _focus_get_tasks "$cur"
+                   ;;
+               esac
+               ;;
+
+            2) case "$arg" in 
+                   make|rename)
+                   _focus_get_tasks "$cur"
+                   ;;
+               esac
+               ;;
+        esac
+    fi
+    return 0;
+} &&
+
+complete -F _focus focus
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
