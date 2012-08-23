@@ -1,9 +1,3 @@
-import os
-import time
-import shutil
-import psutil
-import subprocess
-
 from focus.plugin.modules import im as plugins
 from focus_unittest import (
     FocusTestCase, IS_MACOSX, skipUnless, skipIf

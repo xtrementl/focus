@@ -40,6 +40,11 @@ Play a sound after your task timer runs out or whenever you end the task.
 You can also play a sound when starting tasks, in case you want to get
 your groove on.
 
+Notifications
+-------------
+Show a popup system notification message when a task is started or
+has ended, either by you completing the task or the timer running out.
+
 Update IM Status
 ----------------
 Update the account status for your favorite instant messenger (IM) applications
@@ -79,7 +84,13 @@ Optional External Dependencies
 ------------------------------
 
 * Linux:
-    ``mpg123``, ``play``, or ``aplay`` [WAV only] (to play sounds)
+    `mpg123 <http://www.mpg123.de/>`_, `play <http://sox.sourceforge.net/>`_,
+    or `aplay <http://www.alsaplayer.org/>`_ [WAV only] (to play sounds)
+
+* Mac OSX:
+    `terminal-notifier <https://github.com/alloy/terminal-notifier>`_
+    or `growlnotify <http://growl.info/extras.php/#growlnotify>`_
+    (to show notifications)
 
 Usage
 =====
@@ -240,6 +251,10 @@ For example: ::
         close /path/to/file;     # close app at task start
         end_run /path/to/file;   # run app at task end (manual)
         end_close /path/to/file; # close app at task end (manual)
+
+        # See Task Timer below..
+        timer_run /path/to/file;   # run app at task end (timer elapsed)
+        timer_close /path/to/file; # close app at task end (timer elapsed)
     }
 
 Task Timer
@@ -294,19 +309,40 @@ For example::
 Playing Sounds
 --------------
 
-The ``play`` option for either block supports the path to a sound file that
-is playable on your system via available external binaries (``mpg123``,
-``play``, and ``aplay`` [WAV only]). Only a single value is supported, and the
-option cannot be defined more than once. Make sure your preferred binary is
-installed and works correctly by manually running your sound file through the
-program.
+The ``play`` options for the ``sounds`` block support the path to a sound file
+that is playable on your system via available external binaries (``mpg123``,
+``play``, and ``aplay`` [WAV only]). Only a single value is supported for each
+option, and each type of option cannot be defined more than once. Make sure
+your preferred binary is installed and works correctly by manually running your
+sound file through the program.
 
 For example: ::
 
     sounds {
         play /path/to/file;        # play sound file at task start
         end_play /path/to/file;    # play sound file at task end (manual)
-        timer_play /path/to/file;  # play sound file at task end (manual)
+        timer_play /path/to/file;  # play sound file at task end (timer elapsed)
+    }
+
+Notifications
+-------------
+
+The ``show`` options for the ``notify`` block support a single message that
+will be shown as a system notification. Only a single value is supported for
+each option, and each type of option cannot be defined more than once.
+
+On Linux/Unix, the feature functions via the DBUS IPC bus. On Mac OSX, external
+binaries (``terminal-notifier`` and ``growlnotify``) will be used when
+available; otherwise, a fallback alert dialog will be shown. If using Mac OSX,
+make sure your preferred binary is installed and works correctly, unless the
+fallback method is desired.
+
+For example: ::
+
+    notify {
+        show "message here";        # notify at task start
+        end_show "message here";    # notify at task end (manual)
+        timer_show "message here";  # notify at task end (timer elapsed)
     }
 
 Updating IM Status

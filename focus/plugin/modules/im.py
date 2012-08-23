@@ -375,7 +375,7 @@ class IMStatus(base.Plugin):
         super(IMStatus, self).__init__()
         self.messages = {}
         self.statuses = {}
-        self.set_status_funcs = []
+        self.set_status_funcs = ()
 
         if common.IS_MACOSX:
             self.set_status_funcs = (
