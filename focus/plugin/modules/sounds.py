@@ -96,7 +96,7 @@ class PlaySound(base.Plugin):
 
         if len(values) != 1:
             raise TypeError
-        value = os.path.realpath(values[0])
+        value = os.path.realpath(os.path.expanduser(values[0]))
 
         if not os.path.isfile(value) and not os.path.islink(value):
             raise ValueError(u'Sound file "{0}" does not exist'
