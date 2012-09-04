@@ -133,7 +133,7 @@ class Notify(base.Plugin):
 
             while commands:
                 try:
-                    command = command.pop()
+                    command = commands.pop()
                     common.extract_app_paths(command)
                 except ValueError:
                     continue
