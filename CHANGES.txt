@@ -1,3 +1,7 @@
+v0.1.2, 2012-09-04:
+
+    * Minor bug fix for Notify plugin on Mac OSX.
+
 v0.1.1, 2012-09-03:
 
     * Enhancements:
