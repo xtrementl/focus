@@ -1,1 +1,16 @@
-v0.1.0, 2012-06-22 -- Initial release.
+v0.1.1, 2012-09-03:
+
+    * Enhancements:
+      - Restructured config file format for easier timer/end options.
+      - Added new plugins: IM, Stats, Notification
+      - Added bash_completion script to autocomplete available commands and supported parameters.
+      - Improved output formatting for existing commands.
+
+    * Bug fixes:
+      - Sudo usage is now properly persisting timeout information.
+      - Fixed SiteBlock plugin not appending convenience domains in certain cases.
+      - Fixed minor edge-case bugs in config parser.
+
+v0.1.0, 2012-06-22:
+
+    * First public release.
