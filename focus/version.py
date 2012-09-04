@@ -1,7 +1,7 @@
 """ This module provides the project version info and comparison utility.
     """
 
-__version_info__ = (0, 1, 1)
+__version_info__ = (0, 1, 2)
 __version__ = '.'.join(str(x) for x in __version_info__)
 
 
