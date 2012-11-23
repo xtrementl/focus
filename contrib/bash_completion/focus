@@ -3,7 +3,7 @@
 have focus &&
 _focus_get_tasks() {
     local cur=$1 IFS=$'\n' i j
-    _compopt_o_filenames
+    type _compopt_o_filenames &>/dev/null && _compopt_o_filenames
 
     i=0
     for j in $(compgen -d ~/.focus/tasks/$cur); do
