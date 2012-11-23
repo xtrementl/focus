@@ -1,3 +1,7 @@
+v0.1.3, 2012-11-22:
+
+    * Enhancement to stats plugin to split long running task time across date boundaries.
+
 v0.1.2, 2012-09-04:
 
     * Minor bug fix for Notify plugin on Mac OSX.

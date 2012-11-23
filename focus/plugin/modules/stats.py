@@ -14,6 +14,9 @@ except ImportError:
 from focus.plugin import base
 from focus import common, errors
 
+MINS_IN_HOUR = 60
+MINS_IN_DAY = MINS_IN_HOUR * 24
+
 
 class Stats(base.Plugin):
     """ Prints usage statistics about tasks.
@@ -58,32 +61,55 @@ class Stats(base.Plugin):
             return
 
         self._setup_dir(task.base_dir)
-
-        # build filename
         stats_dir = self._sdir(task.base_dir)
-        date_str = datetime.date.today().strftime('%Y%m%d')
-        filename = os.path.join(stats_dir, '{0}.json'.format(date_str))
+        duration = task.duration
 
-        with open(filename, 'a+') as file_:
-            # fetch any existing data
-            try:
-                file_.seek(0)
-                data = json.loads(file_.read())
-            except (ValueError, OSError):
-                data = {}
+        while duration > 0:
+            # build filename
+            date = (datetime.datetime.now() -
+                    datetime.timedelta(minutes=duration))
+            date_str = date.strftime('%Y%m%d')
+            filename = os.path.join(stats_dir, '{0}.json'.format(date_str))
 
-            # update task stats
-            if not task.name in data:
-                data[task.name] = 0
-            data[task.name] += task.duration
+            with open(filename, 'a+') as file_:
+                # fetch any existing data
+                try:
+                    file_.seek(0)
+                    data = json.loads(file_.read())
+                except (ValueError, OSError):
+                    data = {}
 
-            # write file
-            try:
-                file_.seek(0)
-                file_.truncate(0)
-                file_.write(json.dumps(data))
-            except (ValueError, OSError):
-                pass
+                if not task.name in data:
+                    data[task.name] = 0
+
+                # how much total time for day
+                try:
+                    total_time = sum(int(x) for x in data.values())
+                    if total_time > MINS_IN_DAY:
+                        total_time = MINS_IN_DAY
+
+                except ValueError:
+                    total_time = 0
+
+                # constrain to single day
+                amount = duration
+                if amount + total_time > MINS_IN_DAY:
+                    amount = MINS_IN_DAY - total_time
+
+                    # invalid or broken state, bail
+                    if amount <= 0:
+                        break
+
+                data[task.name] += amount
+                duration -= amount
+
+                # write file
+                try:
+                    file_.seek(0)
+                    file_.truncate(0)
+                    file_.write(json.dumps(data))
+                except (ValueError, OSError):
+                    pass
 
     def _fuzzy_time_parse(self, value):
         """ Parses a fuzzy time value into a meaningful interpretation.
@@ -171,11 +197,11 @@ class Stats(base.Plugin):
                 """
             mins = int(mins)
 
-            if mins < 60:
+            if mins < MINS_IN_HOUR:
                 time_str = '0:{0:02}'.format(mins)
             else:
-                hours = mins / 60
-                mins %= 60
+                hours = mins // MINS_IN_HOUR
+                mins %= MINS_IN_HOUR
 
                 if mins > 0:
                     time_str = '{0}:{1:02}'.format(hours, mins)

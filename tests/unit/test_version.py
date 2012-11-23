@@ -29,7 +29,7 @@ class TestVersion(FocusTestCase):
     def testCorrectVersion(self):
         """ version.compare_version: correct version defined.
             """
-        self.assertEqual(self.version, (0, 1, 2))
+        self.assertEqual(self.version, (0, 1, 3))
 
     def testEqual__compare_version(self):
         """ version.compare_version: equal to's.
